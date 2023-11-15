@@ -115,7 +115,7 @@ class Server:
 
                     if self.verbosity:
                         traceback.print_exception(type(ex), ex, ex.__traceback__)
-                        print(len(packed))
+                        
                     
             time.sleep(.01)
 
@@ -132,7 +132,7 @@ class Server:
             path = pather(self.path0,pathed)
             name = "position.csv"
             filer = {"path" : path,"N" : N,"ip" : client_address[0],
-                            "connection":connection,"name" : name,"nmax":np.floor(8191/N)}
+                            "connection":connection,"name" : name,"nMax":np.floor(8191/N)}
 
             return filer
 
