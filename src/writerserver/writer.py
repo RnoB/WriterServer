@@ -1,4 +1,3 @@
-import numpy as np
 import socket
 import time
 import threading
@@ -9,7 +8,7 @@ import re
 import json
 import uuid
 import os
-from copy import deepcopy
+
 
 
 codes = {"connect" : 4200, "connected" : 4201, "update" : 4202, "close" : 4203,
