@@ -62,7 +62,7 @@ class Client:
         message += struct.pack('32s',self.name.encode('UTF-8'))
 
         self.clientTCP.sendall(message)
-        code = struct.unpack('i',self.clientTCP.recv(4))[0]
+        code = struct.unpack('<i',self.clientTCP.recv(4))[0]
         print("connected : "+str(code))
         time.sleep(1)
 
