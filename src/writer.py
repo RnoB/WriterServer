@@ -102,9 +102,9 @@ class Server:
                         
                         while nx>nMax:
                             packed = filer['connection'].recv(N*nMax*8)
-                            print("nx : "+str(nx*N*8)+" packed : "+str(len(packed)))
+                            print("nx : "+str(nMax*N*8)+" packed : "+str(len(packed)))
                             data = struct.unpack(N*nMax*'d',packed)
-                            self.writeData(filer["path"] + "/" + filer["name"],N,data)
+                            #self.writeData(filer["path"] + "/" + filer["name"],N,data)
                             nx -= nMax
                         packed = filer['connection'].recv(N*nx*8)
                         data = struct.unpack(N*nx*'d',packed)
