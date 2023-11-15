@@ -165,10 +165,9 @@ class Server:
 
 
     def manager(self):
-        for ips in self.serverIP: 
-            registerThread = threading.Thread(target=self.registerNew, args=(self.ip, self.port,))
-            registerThread.daemon = True
-            registerThread.start()  
+        registerThread = threading.Thread(target=self.registerNew, args=(self.ip, self.port,))
+        registerThread.daemon = True
+        registerThread.start()  
 
 
 
