@@ -97,15 +97,16 @@ class Server:
                     
                     if code == nC["writer"]["update"]:
                         N = filer["N"]
-                        nMax = filer["nMax"]
                         nx = struct.unpack('<i',filer['connection'].recv(4))[0]
-                        
-                        while nx>nMax:
-                            packed = filer['connection'].recv(N*nMax*8)
-                            print("nx : "+str(nMax*N*8)+" packed : "+str(len(packed)))
-                            #data = struct.unpack(N*nMax*'d',packed)
-                            #self.writeData(filer["path"] + "/" + filer["name"],N,data)
-                            nx -= nMax
+                        messageLength = N*nMax*8
+                        receivedLength = 0
+                        packed = b''
+                        while receivedLength<messageLength:
+                            received = filer['connection'].recv(messageLength-receivedLength)
+                            receivedLength += len(received)
+                            packed +=received
+                            print("messageLength : "+str(messageLength)+" receivedLength : "+str(len(receivedLength)))
+
                         packed = filer['connection'].recv(N*nx*8)
                         data = struct.unpack(N*nx*'d',packed)
                         self.writeData(filer["path"] + "/" + filer["name"],N,data)
@@ -133,7 +134,7 @@ class Server:
             path = pather(self.path0,pathed)
             name = "position.csv"
             filer = {"path" : path,"N" : N,"ip" : client_address[0],
-                            "connection":connection,"name" : name,"nMax":int(np.floor(4090/N))}
+                            "connection":connection,"name" : name}
 
             return filer
 
