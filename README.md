@@ -10,14 +10,14 @@ from writerserver import writer
 ```
 on the server
 ```python 
-server = writer.Server(path = "path_to_your_data",ip= "XXX.XXX.XXX.XXX",port = "YYYY")
+server = writer.Server(path = "path_to_your_data",ip= "XXX.XXX.XXX.XXX",port = YYYY)
 server.start()
 ```
 
 then start a client
 ```python
 N = number_of_columns_for_your_data
-client = writer.Client(N = N,ip= "XXX.XXX.XXX.XXX",port = "YYYY")
+client = writer.Client(N = N,ip= "XXX.XXX.XXX.XXX",port = YYYY)
 client.start()
 ```
 then you can send data
