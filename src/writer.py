@@ -87,7 +87,7 @@ class Server:
             for filer in self.filerList:
                 try:
                     code = struct.unpack('<i',filer['connection'].recv(4))[0]
-                    
+                    print(code)
                     if code == codes["update"]:
                         N = filer["N"]
                         nx = struct.unpack('<i',filer['connection'].recv(4))[0]
