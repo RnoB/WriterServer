@@ -133,7 +133,7 @@ class Server:
             path = pather(self.path0,pathed)
             name = "position.csv"
             filer = {"path" : path,"N" : N,"ip" : client_address[0],
-                            "connection":connection,"name" : name,"nMax":int(np.floor(8191/N))}
+                            "connection":connection,"name" : name,"nMax":int(np.floor(4090/N))}
 
             return filer
 
