@@ -87,7 +87,6 @@ class Server:
             for filer in self.filerList:
                 try:
                     code = struct.unpack('<i',filer['connection'].recv(4))[0]
-                    print(code)
                     if code == codes["update"]:
                         N = filer["N"]
                         nx = struct.unpack('<i',filer['connection'].recv(4))[0]
@@ -186,22 +185,3 @@ class Server:
         self.filerList = []
         self.port = port
         self.ip = ip
-
-
-
-
-
-
-
-
-def main():
-    t0 = time.time()
-    writer = Server()
-    writer.start()
-    while True:
-        t = time.time()-t0
-        time.sleep(360000)
-        print(">>>>>>>>>>>> Writing Server is in service since " + str(int(t/3600)) +" hours")
-
-if __name__ == '__main__':
-    main()
