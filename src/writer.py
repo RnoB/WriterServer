@@ -6,6 +6,9 @@ import struct
 import traceback
 import sys
 import re
+import json
+import uuid
+import os
 from copy import deepcopy
 
 def getUUID():
