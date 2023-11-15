@@ -39,7 +39,7 @@ nC = getNetworkCode()
 
 class Client:
 
-    def getName():
+    def getName(self):
         return self.name
 
     def write(self,data):
