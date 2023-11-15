@@ -11,6 +11,10 @@ import uuid
 import os
 from copy import deepcopy
 
+
+codes = {"connect" : 4200, "connected" : 4201, "update" : 4202, "close" : 4203,
+         "path" : 4205, "fileName" : 4206, "setNumber" : 4207}
+
 def getUUID():
     return uuid.uuid4().hex
 
@@ -26,17 +30,6 @@ def pather(path,params = []):
             os.makedirs(path)
     return path
 
-def getNetworkCode():
-
-    with open("networkCode.json", mode='r') as infile:
-        
-        networkCode = json.loads(infile.read())
-
-    return networkCode
-
-nC = getNetworkCode()
-
-
 class Client:
 
     def getName(self):
@@ -44,7 +37,7 @@ class Client:
 
     def write(self,data):
         nx = int(len(data)/self.N)
-        message = struct.pack('<ii', nC["writer"]['update'],nx)
+        message = struct.pack('<ii', codes['update'],nx)
         message += struct.pack(len(data)*'d',*data)
         self.clientTCP.sendall(message)
 
@@ -58,7 +51,7 @@ class Client:
                 print('- Give Status -- connection failed')
                 self.binded = False   
                 time.sleep(2)
-        message = struct.pack('<ii', nC["writer"]['connect'],self.N) 
+        message = struct.pack('<ii', codes['connect'],self.N) 
         message += struct.pack('32s',self.name.encode('UTF-8'))
 
         self.clientTCP.sendall(message)
@@ -66,10 +59,10 @@ class Client:
         print("connected : "+str(code))
         time.sleep(1)
 
-    def __init__(self,N = 1):
+    def __init__(self,N = 1,ip = "localhost",port = 1234):
         self.N = N
-        self.port = nC["server"]["port"]
-        self.ip = nC["server"]["ip"]
+        self.port = port
+        self.ip = ip
 
         self.binded = False
 
@@ -95,7 +88,7 @@ class Server:
                 try:
                     code = struct.unpack('<i',filer['connection'].recv(4))[0]
                     
-                    if code == nC["writer"]["update"]:
+                    if code == codes["update"]:
                         N = filer["N"]
                         nx = struct.unpack('<i',filer['connection'].recv(4))[0]
                         messageLength = N*nx*8
@@ -107,7 +100,7 @@ class Server:
                             packed +=received
                         data = struct.unpack(N*nx*'d',packed)
                         self.writeData(filer["path"] + "/" + filer["name"],N,data)
-                    elif code != nC["writer"]['close']:
+                    elif code != codes['close']:
                         del filer
                         
                 except Exception as ex:
@@ -122,7 +115,7 @@ class Server:
         connection.settimeout(100)
         code = struct.unpack('i',connection.recv(4))[0]
         print('------ code : '+ str(code))
-        if code == nC["writer"]["connect"]:
+        if code == codes["connect"]:
             N = struct.unpack('i',connection.recv(4))[0]
             print("------ N : "+str(N))
             filePath = connection.recv(32).decode('UTF-8')
@@ -164,7 +157,7 @@ class Server:
                 print('------ Connection coming from ' + str(client_address))
                 filer = self.register(connection,client_address)
                 self.filerList.append(filer)
-                message = struct.pack('<i', nC["writer"]['connected'])
+                message = struct.pack('<i', codes['connected'])
                 filer["connection"].sendall(message)
             except Exception as ex:
                 if self.verbosity:
@@ -186,13 +179,13 @@ class Server:
         self.updateThread.daemon = True
         self.updateThread.start()
 
-    def __init__(self,verbosity = False):
+    def __init__(self,path = "./",ip = "localhost",port = 1234,verbosity = False):
         self.verbosity = verbosity
         self.running = True
-        self.path0 = nC["path"]
+        self.path0 = path
         self.filerList = []
-        self.port = nC["server"]["port"]
-        self.ip = nC["server"]["ip"]
+        self.port = port
+        self.ip = ip
 
 
 
