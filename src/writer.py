@@ -105,7 +105,7 @@ class Server:
                             received = filer['connection'].recv(messageLength-receivedLength)
                             receivedLength += len(received)
                             packed +=received
-                            print("messageLength : "+str(messageLength)+" receivedLength : "+str(len(receivedLength)))
+                            print("messageLength : "+str(messageLength)+" receivedLength : "+str(receivedLength))
 
                         
                         data = struct.unpack(N*nx*'d',packed)
