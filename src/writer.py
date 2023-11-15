@@ -66,7 +66,7 @@ class Client:
         print("connected : "+str(code))
         time.sleep(1)
 
-    def __init__(self,ip = "cbi",N = 1):
+    def __init__(self,N = 1):
         self.N = N
         self.port = nC["server"]["port"]
         self.ip = nC["server"]["ip"]
