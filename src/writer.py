@@ -98,8 +98,8 @@ class Server:
                     if code == nC["writer"]["update"]:
                         N = filer["N"]
                         nx = struct.unpack('<i',filer['connection'].recv(4))[0]
-                        
-                        data = struct.unpack(N*nx*'d',filer['connection'].recv(N*nx*8))
+                        packed = filer['connection'].recv(N*nx*8)
+                        data = struct.unpack(N*nx*'d',packed)
                         self.writeData(filer["path"] + "/" + filer["name"],N,data)
                     elif code != nC["writer"]['close']:
                         del filer
@@ -108,11 +108,12 @@ class Server:
 
                     if self.verbosity:
                         traceback.print_exception(type(ex), ex, ex.__traceback__)
+                        print(len(packed))
                     
             time.sleep(.01)
 
     def register(self,connection,client_address):
-        connection.settimeout(10)
+        connection.settimeout(100)
         code = struct.unpack('i',connection.recv(4))[0]
         print('------ code : '+ str(code))
         if code == nC["writer"]["connect"]:
