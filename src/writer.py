@@ -98,7 +98,7 @@ class Server:
                     if code == nC["writer"]["update"]:
                         N = filer["N"]
                         nx = struct.unpack('<i',filer['connection'].recv(4))[0]
-                        messageLength = N*nMax*8
+                        messageLength = N*nx*8
                         receivedLength = 0
                         packed = b''
                         while receivedLength<messageLength:
@@ -107,7 +107,7 @@ class Server:
                             packed +=received
                             print("messageLength : "+str(messageLength)+" receivedLength : "+str(len(receivedLength)))
 
-                        packed = filer['connection'].recv(N*nx*8)
+                        
                         data = struct.unpack(N*nx*'d',packed)
                         self.writeData(filer["path"] + "/" + filer["name"],N,data)
                     elif code != nC["writer"]['close']:
