@@ -157,7 +157,7 @@ class Server:
                 print('------ Connection coming from ' + str(client_address))
                 filer = self.register(connection,client_address)
                 self.filerList.append(filer)
-                message = struct.pack('<i', codes["writer"]['connected'])
+                message = struct.pack('<i', nC["writer"]['connected'])
                 filer["connection"].sendall(message)
             except Exception as ex:
                 if self.verbosity:
