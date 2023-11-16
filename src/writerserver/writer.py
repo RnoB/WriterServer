@@ -126,7 +126,7 @@ class Server:
                         data = struct.unpack(N*nx*'d',packed)
                         self.writeData(filer["path"] + "/" + filer["name"],N,data)
                     elif code == codes['close']:
-                        del filer
+                        self.filerList.remove(filer)
                         
                 except Exception as ex:
 
