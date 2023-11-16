@@ -81,6 +81,10 @@ class Client:
         print("connected : "+str(code))
         time.sleep(1)
 
+    def stop(self):
+        message = struct.pack('<i', codes['close'])
+        self.clientTCP.sendall(message)
+
     def __init__(self,N = 1,ip = "localhost",port = 1234):
         self.N = N
         self.port = port
@@ -121,7 +125,7 @@ class Server:
                             packed +=received
                         data = struct.unpack(N*nx*'d',packed)
                         self.writeData(filer["path"] + "/" + filer["name"],N,data)
-                    elif code != codes['close']:
+                    elif code == codes['close']:
                         del filer
                         
                 except Exception as ex:
