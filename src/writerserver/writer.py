@@ -133,7 +133,7 @@ class Server:
             time.sleep(.01)
 
     def register(self,connection,client_address):
-        connection.settimeout(100)
+        connection.settimeout(1)
         code = struct.unpack('i',connection.recv(4))[0]
         print('------ code : '+ str(code))
         if code == codes["connect"]:
