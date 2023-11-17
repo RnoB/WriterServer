@@ -152,6 +152,7 @@ class Server:
 
             projectN = struct.unpack('i',connection.recv(4))[0] 
             project = connection.recv(projectN).decode('UTF-8')
+            print("------ projecy : "+str(project))
 
 
 
