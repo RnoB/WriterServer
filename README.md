@@ -17,7 +17,7 @@ server.start()
 then start a client
 ```python
 N = number_of_columns_for_your_data
-client = writer.Client(N = N,ip= "XXX.XXX.XXX.XXX",port = YYYY)
+client = writer.Client(N = N,ip= "XXX.XXX.XXX.XXX",port = YYYY,project = "path_to_your_project_data")
 client.start()
 ```
 then you can send data
