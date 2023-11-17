@@ -141,7 +141,7 @@ class Server:
             time.sleep(.01)
 
     def register(self,connection,client_address):
-        connection.settimeout(.1)
+        connection.settimeout(self.timeout)
         code = struct.unpack('i',connection.recv(4))[0]
         print('------ code : '+ str(code))
         if code == codes["connect"]:
@@ -216,10 +216,11 @@ class Server:
         self.updateThread.daemon = True
         self.updateThread.start()
 
-    def __init__(self,path = "./",ip = "localhost",port = 1234,verbosity = False):
+    def __init__(self,path = "./",ip = "localhost",port = 1234,verbosity = False,timeout = 0.1):
         self.verbosity = verbosity
         self.running = True
         self.path0 = path
         self.filerList = []
         self.port = port
         self.ip = ip
+        self.timeout = timeout
