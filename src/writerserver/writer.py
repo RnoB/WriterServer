@@ -73,8 +73,11 @@ class Client:
                 print('- Give Status -- connection failed')
                 self.binded = False   
                 time.sleep(2)
+        projectN = len(self.project)
         message = struct.pack('<ii', codes['connect'],self.N) 
         message += struct.pack('32s',self.name.encode('UTF-8'))
+        message += struct.pack('<i', projectN) 
+        message += struct.pack(str(projectN)+'s',self.project.encode('UTF-8'))
 
         self.clientTCP.sendall(message)
         code = struct.unpack('<i',self.clientTCP.recv(4))[0]
@@ -85,7 +88,7 @@ class Client:
         message = struct.pack('<i', codes['close'])
         self.clientTCP.sendall(message)
 
-    def __init__(self,N = 1,ip = "localhost",port = 1234):
+    def __init__(self,N = 1,ip = "localhost",port = 1234, project = "test"):
         self.N = N
         self.port = port
         self.ip = ip
@@ -93,6 +96,7 @@ class Client:
         self.binded = False
 
         self.name = getUUID()
+        self.project = project
 
         self.clientTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.clientTCP.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
@@ -145,8 +149,15 @@ class Server:
             print("------ N : "+str(N))
             filePath = connection.recv(32).decode('UTF-8')
             print("------ id : "+str(filePath))
+
+            projectN = struct.unpack('i',connection.recv(4))[0] 
+            project = connection.recv(projectN).decode('UTF-8')
+
+
+
             pathed = getUUIDPath(filePath)
-            path = pather(self.path0,pathed)
+            path = pather(self.path0,[project])
+            path = pather(path,pathed)
             name = "position.csv"
             filer = {"path" : path,"N" : N,"ip" : client_address[0],
                             "connection":connection,"name" : name}
