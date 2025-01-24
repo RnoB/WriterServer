@@ -31,11 +31,12 @@ import re
 import json
 import uuid
 import os
+import numpy as np
 
 
 
 codes = {"connect" : 4200, "connected" : 4201, "update" : 4202, "close" : 4203,
-         "path" : 4205, "fileName" : 4206, "setNumber" : 4207}
+         "path" : 4205, "fileName" : 4206, "setNumber" : 4207,"setPrecision":4208}
 
 def getUUID():
     return uuid.uuid4().hex
@@ -56,6 +57,11 @@ class Client:
 
     def getName(self):
         return self.name
+
+    def setPrecision(self,precision):
+        message = struct.pack('<ii', codes['setPrecision'],precision)
+        self.clientTCP.sendall(message)
+
 
     def write(self,data):
         nx = int(len(data)/self.N)
@@ -106,6 +112,8 @@ class Server:
     def writeData(self,path,N,data):
         nx = int(len(data)/N)
         line = ''
+        data = np.round(data,self.precision)
+        
         for k in range(0,nx):
             line += ','.join(map(str, data[k*N:(k+1)*N]))+'\n'
         f = open(path,"a")
@@ -117,6 +125,7 @@ class Server:
             for filer in self.filerList:
                 try:
                     code = struct.unpack('<i',filer['connection'].recv(4))[0]
+
                     if code == codes["update"]:
                         N = filer["N"]
                         nx = struct.unpack('<i',filer['connection'].recv(4))[0]
@@ -128,9 +137,14 @@ class Server:
                             receivedLength += len(received)
                             packed +=received
                         data = struct.unpack(N*nx*'d',packed)
+
                         self.writeData(filer["path"] + "/" + filer["name"],N,data)
+
                     elif code == codes['close']:
                         self.filerList.remove(filer)
+                    elif code == codes['setPrecision']:
+                        self.precision = struct.unpack('<i',filer['connection'].recv(4))[0]
+
                         
                 except Exception as ex:
 
@@ -216,7 +230,7 @@ class Server:
         self.updateThread.daemon = True
         self.updateThread.start()
 
-    def __init__(self,path = "./",ip = "localhost",port = 1234,verbosity = False,timeout = 0.1):
+    def __init__(self,path = "./",ip = "localhost",port = 1234,verbosity = False,timeout = 0.1,precision = 8):
         self.verbosity = verbosity
         self.running = True
         self.path0 = path
@@ -224,3 +238,4 @@ class Server:
         self.port = port
         self.ip = ip
         self.timeout = timeout
+        self.precision = precision
