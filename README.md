@@ -17,7 +17,7 @@ server.start()
 then start a client
 ```python
 N = number_of_columns_for_your_data
-client = writer.Client(N = N,ip= "XXX.XXX.XXX.XXX",port = YYYY,project = "path_to_your_project_data")
+client = writer.Client(N = N,ip= "XXX.XXX.XXX.XXX",port = YYYY,project = project)
 client.start()
 ```
 then you can send data
@@ -36,5 +36,5 @@ name = client.getName()
 and the path to your data on the server is given by
 
 ```python
-path = "path_to_your_data"+write.getUUIDPath(name)
+path = writer.pather("path_to_your_data"+"/"+project,write.getUUIDPath(name))
 ```
